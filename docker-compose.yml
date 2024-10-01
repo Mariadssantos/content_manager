@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=docker-manager-pg
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=manager-pg
+    volumes:
+      - manager_pg_data:/bitnami/postgresql
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'manager_redis_data:/bitnami/redis/data'
+
+volumes:
+  manager_pg_data:
+  manager_redis_data:
