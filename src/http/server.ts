@@ -1,17 +1,18 @@
-import express, { Request, Response } from "express";
-const http = require('http')
+import express, { NextFunction, Request, Response } from "express";
+import "express-async-errors";
+import { routes } from "./routes";
 
-const app = express()
-const port = 3000
+const app = express();
+app.use(express.json());
 
-app.get('/', (request, response) => {
-    response.send('Hello World!')
-})
+app.use(routes);
 
-app.post('/post', (request, response) => {
-  response.send('post ok')
-})
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof Error) {
+        return res.status(400).json({ message: err.message });
+    }
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+    return res.status(500).json({ status: "error", message: "Internal Server Error" });
+});
+
+app.listen(3000, () => console.log("Server is running"));
